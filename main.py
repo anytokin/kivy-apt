@@ -1,64 +1,85 @@
-from kivy.clock import Clock
-from kivy.uix.behaviors import ButtonBehavior
-from kivymd.app import MDApp
-from kivymd.uix.anchorlayout import MDAnchorLayout
-from kivymd.uix.behaviors import CommonElevationBehavior
-from kivymd.uix.boxlayout import MDBoxLayout
-from flash_python_file import Flash
+#!/usr/bin/env python
 
-class CustomMDAnchorLayout(ButtonBehavior, CommonElevationBehavior, MDAnchorLayout):
-    pass
-class Interface(MDBoxLayout):
-    flashstate=0
-    milli_seconds=0
-    seconds=0
-    hours=0
+import kivy
+import lovecal
+
+from kivy.app import App
+from kivy.uix.screenmanager import ScreenManager
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.properties import StringProperty
+from kivy.graphics import Color, Rectangle
+from kivy.core.audio import SoundLoader
+from kivy.uix.textinput import TextInput
+from kivy.core.window import Window
+from kivy.uix.bubble import Bubble
+
+
+class ValidateInput(TextInput):
+    #invalid_set = r"/\*:|'.?" + '"<>'
+
+    invalid_set = r"[-.\'@_!#$%^&*()<>?/\|}{~:0123456789 ]"
+    count = 0
+
+    def insert_text(self, substring, from_undo=False):
+        firstname = [c for c in substring if c not in self.invalid_set]
+        s = ''.join(firstname)
+        if not self.filled:
+            return super().insert_text(s, from_undo=from_undo)
+
+
+#    def keyboard_on_key_up(self, keycode, text):
+#        if self.readonly and text[1] == "backspace":
+#            self.readonly = False
+#            self.do_backspace()
+
+class Manager(ScreenManager):
+
+    result = StringProperty(None)
+    percentage = StringProperty(None)
+
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        Flash.initialize()
-    def increment_seconds(self, *args):
-        Interface.milli_seconds+=10
-        if(Interface.milli_seconds==100):
-            Interface.milli_seconds=0
-            Interface.seconds+=1
-            if(Interface.seconds==60):
-                Interface.seconds=0
-                Interface.hours+=1
-        self.ids.timeplaceholder.text="{0:0=2d}".format(Interface.hours)+" : "+ "{0:0=2d}".format(Interface.seconds)+" : "+"{0:0=2d}".format(Interface.milli_seconds)
-    def flash_on(self):
-        if(Interface.flashstate==0):
-            print("Flash Light ON")
-            Clock.schedule_interval(self.increment_seconds, 1 / 10)
-            self.ids.flash_icon.icon="alarm-light-off"
-            Interface.flashstate=1
-            self.ids.progressbar.start()
-            Flash.on()
-        else:
-            Clock.unschedule(self.increment_seconds)
-            Interface.milli_seconds=0
-            Interface.seconds=0
-            Interface.hours=0
-            Interface.flashstate = 0
-            print("Flash Light Off")
-            self.ids.flash_icon.icon = "alarm-light"
-            self.ids.progressbar.stop()
-            Flash.off()
-class TestApp(MDApp):
-    def change_style(self, appbar):
-        if(self.theme_cls.theme_style=="Light"):
-            self.theme_cls.theme_style="Dark"
-            self.theme_cls.primary_palette = "Amber"
-            self.theme_cls.accent_hue = "50"
-            appbar.right_action_items= [["weather-sunny", lambda x: self.change_style(self)]]
+        super(Manager, self).__init__(**kwargs)
 
+    def playstart(self):
+        sound = SoundLoader.load('sound/click.wav')
+        sound.play()
+
+    def playreturn(self):
+        sound = SoundLoader.load('sound/click.wav')
+        sound.play()
+
+
+    def results(self):
+        sound = SoundLoader.load('sound/click.wav')
+        print(self.ids.firstname.text)
+        print(self.ids.secondname.text)
+        first = self.ids.firstname.text
+        second = self.ids.secondname.text
+        results = lovecal.calculator(first, second)
+        #print(results)
+        if results == "Failed":
+            self.result = "Failed"
+            self.percentage = "Failed"
         else:
-            self.theme_cls.theme_style="Light"
-            appbar.right_action_items = [["weather-night", lambda x: self.change_style(self)]]
-            self.theme_cls.accent_hue = "A700"
-            self.theme_cls.primary_palette = "Purple"
+            self.result = results['result']
+            self.percentage = results['percentage']
+        #self.result = results[1]
+        #self.percentage = results[0]
+        print(self.result)
+        print(self.percentage)
+        #print(str(results['percentage']))
+        #print(str(results['result']))
+        sound.play()
+
+class ScreenApp(App):
     def build(self):
-        self.theme_cls.primary_palette="Purple"
-        self.theme_cls.accent_palette = "Gray"
-        self.theme_cls.accent_hue="A700"
+        self.icon = 'images/appicon.png'
+        self.sm = Manager()
+        return self.sm
 
-TestApp().run()
+Window.softinput_mode = "below_target"
+
+if __name__ == '__main__':
+    ScreenApp().run()
+    
