@@ -84,6 +84,7 @@ class ConverterApp(MDApp):
                 self.label.text = "please enter a valid decimal number"
 
     def build(self):
+        self.icon = 'images/appicon.png'
         self.state = 0 #initial state
         self.theme_cls.primary_palette = "Blue"
         screen = MDScreen()
