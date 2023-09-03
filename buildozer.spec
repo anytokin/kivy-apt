@@ -1,10 +1,10 @@
 [app]
 
 # (str) Title of your application
-title = ConverterApp
+title = LoveCalc
 
 # (str) Package name
-package.name = ConverterApp
+package.name = LoveCalculator
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = org.stack
@@ -37,7 +37,7 @@ version = 0.1
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
 # requirements = python3.8,kivy,requests,urllib3,chardet,idna,ffpyplayer
-requirements = python3,kivy,kivymd
+requirements = python3,kivy,requests,urllib3,chardet,idna,ffpyplayer
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
 # requirements.source.kivy = ../../kivy
@@ -66,7 +66,7 @@ orientation = portrait
 osx.python_version = 3
 
 # Kivy version to use
-osx.kivy_version = 2.2.1
+osx.kivy_version = 1.9.1
 
 #
 # Android specific
