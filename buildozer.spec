@@ -1,10 +1,10 @@
 [app]
 
 # (str) Title of your application
-title = LoveCalc
+title = ConverterApp
 
 # (str) Package name
-package.name = LoveCalculator
+package.name = ConverterApp
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = org.stack
