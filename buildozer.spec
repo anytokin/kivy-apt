@@ -1,10 +1,10 @@
 [app]
 
 # (str) Title of your application
-title = ConverterApp
+title = MyApp
 
 # (str) Package name
-package.name = ConverterApp
+package.name = MyApp
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = org.stack
