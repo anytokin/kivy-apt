@@ -3,7 +3,7 @@ kivy.require('2.2.1') # replace with your current kivy version !
 
 from kivy.app import App
 from kivy.uix.label import Label
-
+import plyer
 
 class MyApp(App):
 
