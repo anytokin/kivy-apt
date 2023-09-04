@@ -1,10 +1,10 @@
 [app]
 
 # (str) Title of your application
-title = MyApp
+title = GyroscopeTestApp
 
 # (str) Package name
-package.name = MyApp
+package.name = GyroscopeTestApp
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = org.stack
